@@ -96,24 +96,27 @@ async def phrase(message: types.Message):
         if len(length) == 0:
             length = 8
         else:
-            length = int(length.strip())
+            try:
+                length = int(length.strip())
+                if 4 <= length <= 100:
+                    phrases = ""
+                    for _ in range(5):
+                        phrase = ""
+                        for _ in range(length):
+                            phrase += " " + wordlist[randint(0,len(wordlist)-1)]
+                        phrases += "\n\n" + phrase
+                    await message.reply(phrases)
         
-        if 4 <= length <= 100:
-            phrases = ""
-            for _ in range(5):
-                phrase = ""
-                for _ in range(length):
-                    phrase += " " + wordlist[randint(0,len(wordlist)-1)]
-                phrases += "\n\n" + phrase
-            await message.reply(phrases)
-        
-        elif length <= 3:
-            await message.reply("Too short...")
+                elif length <= 3:
+                    await message.reply("Too short...")
 
-        elif length > 100:
-            await message.reply("Too long...")
+                elif length > 100:
+                    await message.reply("Too long...")
+            except:
+                await message.reply("Please provide a number!")
+        
     except Exception as e:
-        await message.reply(str(e))
+        await message.reply("Please provide a valid command!")
 
 
 def generate(length):

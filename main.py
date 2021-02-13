@@ -12,7 +12,7 @@ MIN = 0
 MAX = len(printable) - 1
 
 
-API_TOKEN = '1535112697:AAFWSvm2oI7E5ONdEyqMhP0VPmAPFIHmLXQ'
+API_TOKEN = 'BOT_API_KEY'
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
@@ -173,7 +173,7 @@ async def global_stat(message):
 async def dev(message):
 
     msg = """Hi! friend.
-I am a @Beast420. You can ping me if you want something from me!
+I am a @BeastImran. You can ping me if you want something from me!
 you can see my projects at: https://github.com/BeastImran
     """
 
@@ -193,7 +193,7 @@ def generate(length):
     for _ in range(length):
         password += printable[randint(MIN, MAX)]
     
-    return '`' + password + '`'
+    return password
 
 
 if __name__ == '__main__':

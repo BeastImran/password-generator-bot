@@ -1,6 +1,8 @@
 from random import randint
 from string import printable
 from aiogram import Bot, Dispatcher, executor, types
+from database_class import Database
+from wordlist import wordlist
 
 
 printable = printable[0:-9]
@@ -10,22 +12,21 @@ MIN = 0
 MAX = len(printable) - 1
 
 
-API_TOKEN = 'YOUR_BOT_API'
+API_TOKEN = '1535112697:AAFWSvm2oI7E5ONdEyqMhP0VPmAPFIHmLXQ'
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+db = Database()
+
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    """
-    This handler will be called when user sends `/start` or `/help` command
-    """
-
+    db.insert_user(message["from"]["id"], message["from"]["first_name"])
     start_message = """
-This bot will help you generate really secure password of any length
+This bot will help you generate really secure passwords and passphrases of lengths between 4 to 256 and 4 to 100 respectively.
 
-send /help command to see list of commands
+/help command to see list of commands
 """
 
     await message.reply(start_message)
@@ -33,7 +34,7 @@ send /help command to see list of commands
 
 @dp.message_handler(commands=['help'])
 async def echo(message: types.Message):
-
+    db.insert_user(message["from"]["id"], message["from"]["first_name"])
     help_message = """
 /start : to see the welcome message.
 /gen : to generate a 32 chatacter length password.
@@ -61,14 +62,23 @@ example:
 /phrase 8
 /phrase 12
 /phrase 20
+
+OTHER COMMANDS:
+
+/stat: to see you statistics
+/gstat: to see global statistics
+
+/dev: to see info about this bot's developer
     """
 
     await message.reply(help_message)
 
 
 @dp.message_handler(commands=['gen'])
-async def inp(message: types.Message):
+async def gen(message: types.Message):
+
     length = message.text.replace("/gen", '').strip()
+
     try:
         if len(length) == 0:
             length = 16
@@ -76,9 +86,12 @@ async def inp(message: types.Message):
             length = int(length)
 
         if 4 <= length <= 256:
+
             passwords = ""
             for _ in range(5):
                 passwords += "\n\n" + (generate(length))
+
+            db.increase_password_count(message["from"]["id"], 5)
 
             await message.reply(passwords)
 
@@ -91,9 +104,9 @@ async def inp(message: types.Message):
 
 @dp.message_handler(commands=['phrase'])
 async def phrase(message: types.Message):
-    from wordlist import wordlist
 
     length = message.text.replace('/phrase', '').strip().replace(" ", '')
+
     try:
         if len(length) == 0:
             length = 8
@@ -101,16 +114,23 @@ async def phrase(message: types.Message):
         try:
 
             if length != 8:
+    
                 length = int(length)
             if 4 <= length <= 100:
+
                 phrases = ""
+
                 for _ in range(5):
                     phrase = ""
                     for _ in range(length):
+
                         phrase += " " + wordlist[randint(0,len(wordlist)-1)]
+
                     phrases += "\n\n" + '`' + phrase + '`'
+
+                db.increase_passphrase_count(message["from"]["id"], 5)
                 await message.reply(phrases)
-    
+
             elif length <= 3:
                 await message.reply("Too short...")
 
@@ -124,9 +144,47 @@ async def phrase(message: types.Message):
         await message.reply("Please provide a valid command!")
 
 
+@dp.message_handler(commands=['stats', 'stat', 'statistics'])
+async def user_stat(message):
+
+    stats = db.user_stat(message["from"]["id"])
+    passwords_generated = stats[0]
+    passphrases_generated = stats[1]
+    
+    msg = f"You have generated {passwords_generated} strong passwords and {passphrases_generated} easy to remember passphrases."
+    
+    await message.reply(msg)
+
+
+@dp.message_handler(commands=['gstats', 'gstat', 'gstatistics'])
+async def global_stat(message):
+
+    stats = db.global_stat()
+    total_users = stats[0]
+    passwords_generated = stats[1]
+    passphrases_generated = stats[2]
+
+    msg = f"A total of {total_users} users have generated {passwords_generated} strong passwords and {passphrases_generated} easy to remember passphrases."
+
+    await message.reply(msg)
+
+
+@dp.message_handler(commands=['dev', 'developer', 'builder'])
+async def dev(message):
+
+    msg = """Hi! friend.
+I am a @Beast420. You can ping me if you want something from me!
+you can see my projects at: https://github.com/BeastImran
+    """
+
+    await message.reply(msg)
+
+
 @dp.message_handler()
 async def same_reply(message):
-    await message.reply(message)
+
+    db.insert_user(message["from"]["id"], message["from"]["first_name"])
+    await message.reply("PLEASE SEND SOMETHING MEANINGFUL!")
 
 
 def generate(length):

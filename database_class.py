@@ -53,4 +53,4 @@ class Database:
         return tuple(self.user_db_cur.execute(f"SELECT password_count, passphrase_count FROM users WHERE id={id}"))[0]
 
     def global_stat(self) -> tuple:
-        return tuple(self.user_db_cur.execute(f"SELECT COUNT(*), SUM(password_count), SUM(passphrase_count) FROM users"))[0]
+        return tuple(self.user_db_cur.execute(f"SELECT SUM(password_count), SUM(passphrase_count) FROM users"))[0]

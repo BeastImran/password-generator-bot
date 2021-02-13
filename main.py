@@ -160,11 +160,10 @@ async def user_stat(message):
 async def global_stat(message):
 
     stats = db.global_stat()
-    total_users = stats[0]
-    passwords_generated = stats[1]
-    passphrases_generated = stats[2]
+    passwords_generated = stats[0]
+    passphrases_generated = stats[1]
 
-    msg = f"A total of {total_users} users have generated {passwords_generated} strong passwords and {passphrases_generated} easy to remember passphrases."
+    msg = f"Users have generated {passwords_generated} strong passwords and {passphrases_generated} easy to remember passphrases."
 
     await message.reply(msg)
 

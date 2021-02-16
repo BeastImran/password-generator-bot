@@ -9,11 +9,11 @@ Please ping me in telegram [@BeastImran](https://t.me/BeastImran) if you want to
 
 ## Prerequisite
 
-You will need to have [python3](https://www.python.org/ "python official site") language and [aiogram](https://pypi.org/project/aiogram/ "pip site for aiogram") library or API installed.
+You will need to have [python3](https://www.python.org/ "python official site") language and [aiogram](https://pypi.org/project/aiogram/ "pip site for aiogram") and [cryptography](https://pypi.org/project/cryptography/) libraries or APIs installed.
 
-You can install aiogram library using pip.
+You can install aiogram and cryptography libraries using pip.
 ```bash
-  pip install aiogram
+  pip install aiogram cryptography
 ```
 ## Installation and running
 
@@ -49,7 +49,7 @@ The installation is straight forward.
 
   `/gen 8` `/gen 10` `/gen 16` `/gen 64`
 
-  passwords generated using `/gen` command are very strong but are not easy to remember. You should have some amount of guts to remember such passwords.
+  🔑 passwords generated using /gen command are very strong 💪 but are not easy to remember. You should have some amount of guts to remember such passwords.
   It's better if you use a pass phrase if you want to remember. A pass phrase is a kind of password which is a combination of several `n` different words like as shown bellow.
   
   pass-phrase: absentee afternoon plus repackage long
@@ -61,7 +61,21 @@ The installation is straight forward.
   **example:**
   
   `/phrase 4` `/phrase 8` `/phrase 12` `/phrase 20`
-    
+  
+  **SMALL FEATURES:**
+
+  `/save`: to save any notes or passwords
+
+  note: all the saved notes are encrypted and no one without a valid decryption key can read the notes. keys are unique to each user. read more about it on my github page. try /dev
+
+  example:
+
+  `/save` I need to meet a friend @12:30 pm today!
+
+  `/save` My amazon pass is AmAsOnPaSz
+<br><br><br>
+  `/get`: to retrive or get all saved notes
+
   **OTHER COMMANDS:**
   
   `/stat`: to see your statistics

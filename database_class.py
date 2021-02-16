@@ -1,4 +1,7 @@
 import sqlite3
+import json
+from ast import literal_eval
+
 
 class Database:
 
@@ -11,24 +14,27 @@ class Database:
             first_name TEXT NOT NULL,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             password_count INTEGER DEFAULT 0 NOT NULL,
-            passphrase_count INTEGER DEFAULT 0 NOT NULL
+            passphrase_count INTEGER DEFAULT 0 NOT NULL,
+            saved_notes TEXT DEFAULT NULL
         )
         """)
 
-    def insert_user(self, id, first_name, password_count=None, passphrase_count=None) -> bool:
+    def insert_user(self, id, first_name) -> bool:
         try:
     
             self.user_db_cur.execute(f"""INSERT OR IGNORE INTO 
                                         users(id, first_name)
                                         VALUES({id}, '{first_name}')""")
+
             self.user_db.commit()
             return True
+
         except:
             return False
     
-    def print_table(self) -> tuple:
+    def all_data(self) -> tuple:
         try:
-            return tuple(self.user_db_cur.execute("SELECT * from users"))[0]
+            return tuple(self.user_db_cur.execute("SELECT * from users"))
         except IndexError:
             pass
     
@@ -54,3 +60,38 @@ class Database:
 
     def global_stat(self) -> tuple:
         return tuple(self.user_db_cur.execute(f"SELECT SUM(password_count), SUM(passphrase_count) FROM users"))[0]
+
+    def all_user_ids(self) -> tuple:
+        return tuple(self.user_db_cur.execute(f"SELECT id FROM users"))
+
+    def save_notes(self, id, msg, saved_date_time) -> None:
+        saved = self.user_db_cur.execute(f"SELECT saved_notes FROM users WHERE id={id}")
+        data = saved.fetchall()
+
+        if data[0][0] == None:
+
+            empty = '''
+                {
+                    "saved":[]
+                }
+            '''
+
+            empty_json = json.loads(empty)
+            empty_json["saved"].append([msg, saved_date_time])
+            self.user_db_cur.execute(f'UPDATE users SET saved_notes = "{empty_json}" WHERE id={id}')
+            self.user_db.commit()
+        else:
+
+            data = literal_eval(data[0][0])
+            data["saved"].append([msg, saved_date_time])
+            self.user_db_cur.execute(f'UPDATE users SET saved_notes = "{data}" WHERE id={id}')
+            self.user_db.commit()
+
+    def get_notes(self, id) -> list:
+        data = self.user_db_cur.execute(f"SELECT saved_notes FROM users WHERE id={id}").fetchall()
+        data = data[0]
+
+        if data[0] == None:
+            return []
+        else:
+            return literal_eval(data[0])["saved"]

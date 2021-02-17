@@ -66,7 +66,7 @@ The installation is straight forward.
 
   `/save`: to save any notes or passwords
 
-  note: all the saved notes are encrypted and no one without a valid decryption key can read the notes. keys are unique to each user. read more about it on my github page. try /dev
+  note: all the saved notes are [encrypted](https://github.com/BeastImran/password-generator-bot/blob/main/encryption.md) and no one without a valid decryption key can read the notes. keys are unique to each user. read more about it on my [github page](https://github.com/BeastImran). try `/dev`
 
   example:
 

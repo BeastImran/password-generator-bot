@@ -6,6 +6,8 @@ This mini-project was started by me as a fun project but it gained over [250+](h
 Please ping me in telegram [@BeastImran](https://t.me/BeastImran) if you want to use this code or files in your project in anyway or need to query something or you want to involve in this project in any manner.
 
 
+### NO LONGER MAINTAINED.
+
 
 ## Prerequisite
 
